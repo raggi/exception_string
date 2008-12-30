@@ -13,7 +13,7 @@ PROJ.name = 'exception_string'
 PROJ.authors = 'James Tucker'
 PROJ.email = 'raggi@rubyforge.org'
 PROJ.url = 'http://github.com/raggi/exception_string'
-PROJ.rubyforge.name = 'raggi'
+PROJ.rubyforge.name = 'libraggi'
 PROJ.version = ExceptionString.version
 
 PROJ.exclude = %w(tmp$ bak$ ~$ CVS \.git \.hg \.svn ^pkg ^doc \.DS_Store
