@@ -18,7 +18,8 @@ PROJ = OpenStruct.new(
   :email => nil,
   :url => "\000",
   :version => ENV['VERSION'] || '0.0.0',
-  :exclude => %w(tmp$ bak$ ~$ CVS \.svn/ \.git/ ^pkg/),
+  :exclude => %w(tmp$ bak$ ~$ CVS \.git/ \.hg/ \.svn/ ^pkg/ ^doc/ \.DS_Store
+    \.hgignore \.gitignore \.dotest \.swp$ .*\.gemspec$),
   :release_name => ENV['RELEASE'],
 
   # System Defaults
@@ -26,28 +27,12 @@ PROJ = OpenStruct.new(
   :libs => [],
   :history_file => 'History.txt',
   :manifest_file => 'Manifest.txt',
-  :readme_file => 'README.txt',
-
-  # Announce
-  :ann => OpenStruct.new(
-    :file => 'announcement.txt',
-    :text => nil,
-    :paragraphs => [],
-    :email => {
-      :from     => nil,
-      :to       => %w(ruby-talk@ruby-lang.org),
-      :server   => 'localhost',
-      :port     => 25,
-      :domain   => ENV['HOSTNAME'],
-      :acct     => nil,
-      :passwd   => nil,
-      :authtype => :plain
-    }
-  ),
+  :readme_file => 'README.rdoc',
 
   # Gem Packaging
   :gem => OpenStruct.new(
     :dependencies => [],
+    :development_dependencies => ['rake', 'bones', 'bacon'],
     :executables => nil,
     :extensions => FileList['ext/**/extconf.rb'],
     :files => nil,
@@ -59,7 +44,7 @@ PROJ = OpenStruct.new(
   # File Annotations
   :notes => OpenStruct.new(
     :exclude => %w(^tasks/setup\.rb$),
-    :extensions => %w(.txt .rb .erb) << '',
+    :extensions => %w(.txt .rb .erb .rdoc) << '',
     :tags => %w(FIXME OPTIMIZE TODO)
   ),
 
@@ -74,10 +59,10 @@ PROJ = OpenStruct.new(
   # Rdoc
   :rdoc => OpenStruct.new(
     :opts => [],
-    :include => %w(^lib/ ^bin/ ^ext/ \.txt$),
+    :include => %w(^lib/ ^bin/ ^ext/ \.txt$ \.rdoc$),
     :exclude => %w(extconf\.rb$),
     :main => nil,
-    :dir => 'doc',
+    :dir => nil,
     :remote_dir => nil
   ),
 
@@ -86,25 +71,10 @@ PROJ = OpenStruct.new(
     :name => "\000"
   ),
 
-  # Rspec
-  :spec => OpenStruct.new(
-    :files => FileList['spec/**/*_spec.rb'],
-    :opts => []
-  ),
-
-  # Subversion Repository
-  :svn => OpenStruct.new(
-    :root => nil,
-    :path => '',
-    :trunk => 'trunk',
-    :tags => 'tags',
-    :branches => 'branches'
-  ),
-
-  # Test::Unit
+  # Tests
   :test => OpenStruct.new(
-    :files => FileList['test/**/test_*.rb'],
-    :file  => 'test/all.rb',
+    :files => FileList['{test,spec}/{{test,spec}_*.rb,*_spec.rb}'],
+    :file  => '',
     :opts  => []
   )
 )
@@ -166,7 +136,7 @@ HAVE_GIT = (Dir.entries(Dir.pwd).include?('.git') and
 # specified.
 #
 #    changes = paragraphs_of('History.txt', 0..1).join("\n\n")
-#    summary, *description = paragraphs_of('README.txt', 3, 3..8)
+#    summary, *description = paragraphs_of('README.rdoc', 3, 3..8)
 #
 def paragraphs_of( path, *paragraphs )
   title = String === paragraphs.first ? paragraphs.shift : nil

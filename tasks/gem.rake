@@ -18,6 +18,9 @@ namespace :gem do
     PROJ.gem.dependencies.each do |dep|
       s.add_dependency(*dep)
     end
+    PROJ.gem.development_dependencies.each do |dep|
+      s.add_development_dependency(*dep)
+    end
 
     s.files = PROJ.gem.files
     s.executables = PROJ.gem.executables.map {|fn| File.basename(fn)}
@@ -113,6 +116,15 @@ namespace :gem do
   task :cleanup do
     sh "#{SUDO} #{GEM} cleanup #{PROJ.gem._spec.name}"
   end
+
+  file "#{PROJ.name}.gemspec" => PROJ.gem._spec.files do |t|
+    open(t.name, 'w') { |f| f.write PROJ.gem._spec.to_ruby }
+  end
+  CLOBBER.include("#{PROJ.name}.gemspec")
+
+  desc 'Generate gemspec'
+  task :spec => "#{PROJ.name}.gemspec"
+  task :release => :spec
 
 end  # namespace :gem
 
