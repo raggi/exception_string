@@ -1,14 +1,14 @@
 History.txt
 Manifest.txt
-README.txt
+README.rdoc
 Rakefile
 lib/exception_string.rb
 spec/.bacon
 spec/helper.rb
 spec/runner
 spec/spec_exception_string.rb
-tasks/ann.rake
 tasks/autospec.rake
+tasks/bacon.rake
 tasks/bones.rake
 tasks/gem.rake
 tasks/git.rake
